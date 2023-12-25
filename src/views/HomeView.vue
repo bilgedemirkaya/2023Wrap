@@ -1,29 +1,56 @@
 <script setup>
-import CountDown from '../components/CountDown.vue'
-import SupportMeLink from '../components/SupportMeLink.vue'
-import fireworksGif from '../assets/fireworks.gif';
+import CountDown from "../components/CountDown.vue";
+import SupportMeLink from "../components/SupportMeLink.vue";
+import fireworksGif from "../assets/fireworks.gif";
+import Questionary from "@/components/Questionary.vue";
+import Introduction from "@/components/Introduction.vue";
+import { ref } from 'vue';
 
+const username = ref(null);
+
+function startTest(_username) {
+  username.value = _username;
+}
+
+function exitTest() {
+  username.value = '';
+}
 </script>
 
 <template>
   <v-app id="inspire">
     <v-toolbar app fixed clipped-left>
       <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
-      <v-toolbar-title class="toolbar-title">2023 Wrap</v-toolbar-title>
+      <v-toolbar-title class="toolbar-title -override">2023: What the heck?!</v-toolbar-title>
     </v-toolbar>
     <v-content>
       <v-container fluid fill-height>
-        <v-layout justify-center align-center>
-          <v-flex shrink>
-            <img :src="fireworksGif" alt="Fireworks" class="fireworks-gif"/>
+        <v-row justify="center">
+          <v-col cols="12" md="6" class="justify-center">
+            <img :src="fireworksGif" alt="Fireworks" class="fireworks-gif" />
             <CountDown />
-          </v-flex>
-        </v-layout>
+          </v-col>
+          <v-col cols="12" md="6" class="justify-center home-view">
+            <Introduction v-if="!username" @startTest="startTest" />
+            <Questionary v-else :username="username" @exit="exitTest" />
+          </v-col>
+        </v-row>
       </v-container>
     </v-content>
+
     <v-footer app fixed>
-      <a href="https://github.com/bilgedemirkaya" class="github-link" target="_blank">
-      <img src="../assets/github-mark-white.svg" alt="GitHub" class="github-icon" width="20px" height="20px"/>
+      <a
+        href="https://github.com/bilgedemirkaya"
+        class="github-link"
+        target="_blank"
+      >
+        <img
+          src="../assets/github-mark-white.svg"
+          alt="GitHub"
+          class="github-icon"
+          width="20px"
+          height="20px"
+        />
       </a>
       <span> Bilge Demirkaya &copy; 2023</span>
       <SupportMeLink />
@@ -32,8 +59,9 @@ import fireworksGif from '../assets/fireworks.gif';
 </template>
 
 <style scoped>
-.toolbar-title {
+.toolbar-title.-override {
   font-size: 1.85rem;
+  margin-inline-start: 3rem;
 }
 
 .fireworks-gif {
@@ -56,5 +84,9 @@ import fireworksGif from '../assets/fireworks.gif';
 
 .github-link {
   margin-top: 5px;
+}
+
+.home-view {
+  margin-top: 3rem;
 }
 </style>

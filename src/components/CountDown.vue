@@ -42,13 +42,35 @@ onUnmounted(() => clearInterval(interval));
 }
 
 .countdown-box {
-  background-color: #1e1e1e;
-  color: white;
   padding: 10px 20px;
   margin: 5px;
   text-align: center;
   border-radius: 5px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Color for days */
+.countdown-box:nth-child(1) {
+  background-color: #ffdd55e7; /* A shade of yellow */
+  color: #1e1e1e; /* Dark text for contrast */
+}
+
+/* Color for hours */
+.countdown-box:nth-child(2) {
+  background-color: #ecc94aa5;
+  color: white;
+}
+
+/* Color for minutes */
+.countdown-box:nth-child(3) {
+  background-color: #ffea0742; /* Brighter yellow */
+  color: white;
+}
+
+/* Color for seconds */
+.countdown-box:nth-child(4) {
+  background-color: #f0ff4f16;
+  color: white;
 }
 
 .countdown-value {

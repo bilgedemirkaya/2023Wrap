@@ -23,14 +23,19 @@ const vuetify = createVuetify({
   theme: {
     themes: {
       dark: {
-        primary: '#001f3f', // Midnight Blue
-        secondary: '#FFD700', // Gold
-        accent: '#FF4136', // Red
+        primary: '#f5da42',
       },
     },
     defaultTheme: 'dark'
   },
+  defaults: {
+    VBtn: {
+      color: '#f5da42',
+      size: 'large',
+    },
+  },
 });
+
 const app = createApp(App);
 
 app.use(router).use(vuetify);
