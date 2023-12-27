@@ -1,12 +1,11 @@
 <script setup>
-import { RouterLink, RouterView } from 'vue-router'
+import { RouterView } from 'vue-router'
+import BaseLayout from './layouts/BaseLayout.vue';
+
 </script>
 
 <template>
-  <header>
-    <div class="wrapper">
-    </div>
-  </header>
-
-  <RouterView />
+  <BaseLayout>
+    <RouterView />
+  </BaseLayout>
 </template>

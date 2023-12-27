@@ -3,11 +3,11 @@
     <div class="intro-text">
       <p>
         <span class="text-h5 bold">What a year it has been!</span> Let's take a
-        moment to celebrate ourselves for making it where we are - yay!
-      </p>
+        moment to celebrate how far you have come - yay!
+      </p><br/><br/><br/>
       <p>
-        Here are some questions. Let's see if I can make some
-        some exciting predictions about what 2024 has in store for you.
+        I want to ask you some questions. Let's see if I can make some
+        exciting predictions about what 2024 has in store for you.
       </p>
     </div>
     <v-text-field

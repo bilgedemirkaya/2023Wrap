@@ -1,6 +1,7 @@
 import { createApp } from "vue";
 import App from "./App.vue";
 import router from "./router";
+import '@mdi/font/css/materialdesignicons.css' // Ensure you are using css-loader
 
 // Vuetify
 import "vuetify/styles";
@@ -15,6 +16,7 @@ const vuetify = createVuetify({
   directives,
   icons: {
     defaultSet: 'mdi',
+    iconfont: 'mdiSvg',
     aliases,
     sets: {
       mdi,
