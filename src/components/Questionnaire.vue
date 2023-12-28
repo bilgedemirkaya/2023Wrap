@@ -1,17 +1,17 @@
 <template>
   <v-container>
-    <p class="text-h5 bold">Hi {{ username?.charAt(0).toUpperCase()+ username.slice(1) }}!</p>
+    <p v-if="store.username" class="text-h5 bold">Hi {{ store.username.charAt(0).toUpperCase()+ store.username.slice(1) }}!</p>
     <v-progress-linear :model-value="progress" bg-color="blue-grey" color="lime"
       class="progress-linear"></v-progress-linear>
-    <div v-if="currentQuestionIndex < questions.length">
+    <div v-if="store.currentIndex < questions.length">
       <div>
-        <component :is="currentQuestionComponent" :key="currentQuestionIndex" :question="questions[currentQuestionIndex]"
+        <component :is="currentQuestionComponent" :key="store.currentIndex" :question="questions[store.currentIndex]"
           @answer="handleAnswer"></component>
       </div>
       <div class="d-flex flex-wrap action-buttons">
-        <v-btn v-if="currentQuestionIndex === 0" class="ma-2 pa-2" color="" @click="emit('exit')">Exit</v-btn>
+        <v-btn v-if="store.currentIndex === 0" class="ma-2 pa-2" color="" @click="emit('exit')">Exit</v-btn>
         <v-btn v-else @click="previousQuestion" class="ma-2 pa-2" color="">Previous</v-btn>
-        <v-btn v-if="currentQuestionIndex !== 10" @click="nextQuestion" class="ma-2 pa-2">Next</v-btn>
+        <v-btn v-if="store.currentIndex !== 10" @click="nextQuestion" class="ma-2 pa-2">Next</v-btn>
         <v-btn v-else @click="finishTest" class="ma-2 pa-2">Finish Test</v-btn>
       </div>
     </div>
@@ -28,6 +28,9 @@ import NewYearResolutionQuestion from "./Questions/NewYearResolutionQuestion.vue
 import ReactToChangeQuestion from "./Questions/ReactToChangeQuestion.vue";
 import SocialPreferenceQuestion from "./Questions/SocialPreferenceQuestion.vue";
 import SelectOptionQuestion from "./Questions/SelectOptionQuestion.vue";
+import { useQuestionnaireStore } from '@/store/questionnaire';
+
+const store = useQuestionnaireStore();
 
 const questionComponents = {
   RatingQuestion,
@@ -42,7 +45,6 @@ const questionComponents = {
   GrowthFocusQuestion: SelectOptionQuestion,
   HopeQuestion: RatingQuestion,
 };
-const props = defineProps(["username"]);
 const emit = defineEmits(["exitQuiz"]);
 const router = useRouter();
 
@@ -55,9 +57,9 @@ const getFeelingTextBasedOnResponse = () => {
     return "Quite the rollercoaster, huh?";
   } else if (response <= 8) {
     return "Looks like things were pretty alright for you!";
-  } else {
-    return "Whoa, you’re on fire!";
   }
+
+  return "Whoa, you’re on fire!";
 };
 
 const getLifeChangingPreText = () => {
@@ -72,8 +74,6 @@ const getLifeChangingPreText = () => {
   return "";
 };
 
-
-const currentQuestionIndex = ref(0);
 const questions = ref([
   {
     id: "RatingQuestion",
@@ -192,37 +192,42 @@ const questions = ref([
 ]);
 
 const currentQuestionComponent = computed(() => {
-  const currentQuestionId = questions.value[currentQuestionIndex.value].id;
+  const currentQuestionId = questions.value[store.currentIndex].id;
   return questionComponents[currentQuestionId] || null;
 });
 
 function handleAnswer(answer) {
-  questions.value[currentQuestionIndex.value].response = answer;
+  questions.value[store.currentIndex].response = answer;
 }
 
-const progress = computed(() => (currentQuestionIndex.value / questions.value.length) * 100);
+const progress = computed(() => (store.currentIndex / questions.value.length) * 100);
 
 
 function nextQuestion() {
-  if (currentQuestionIndex.id === 'RatingQuestion') {
-    questions.value[currentQuestionIndex++].preText = getFeelingTextBasedOnResponse();
+  const index = store.currentIndex;
+
+  if (questions.value[index].id === 'RatingQuestion') {
+    questions.value[index + 1].preText = getFeelingTextBasedOnResponse();
   }
-  if (currentQuestionIndex.id === 'LifeChangingEventQuestion') {
-    questions.value[currentQuestionIndex++].preText = getFeelingTextBasedOnResponse();
+  if (questions.value[index].id === 'LifeChangingEventQuestion') {
+    questions.value[index + 1].preText = getLifeChangingPreText();
   }
 
-  if (currentQuestionIndex.value < questions.value.length - 1) {
-    currentQuestionIndex.value++;
+  if (store.currentIndex < questions.value.length - 1) {
+    store.saveStateToLocalStorage();
+    store.nextQuestion();
   }
 }
 function previousQuestion() {
-  if (currentQuestionIndex.value > 0) {
-    currentQuestionIndex.value--;
+  if (store.currentIndex > 0) {
+    store.previousQuestion();
   }
 }
 
-function finishTest() {
+async function finishTest() {
+  await store.saveStateToFirestore(questions.value);
   router.push('/result');
+  store.clearState();
 }
 </script>
 <style scoped>

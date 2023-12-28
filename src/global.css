@@ -1,0 +1,12 @@
+/* global.css */
+html {
+    font-size: 0.9rem; /* Adjust base font size as needed */
+  }
+
+  body {
+    font-size: 0.9rem;
+  }
+
+  .v-application { /* Targeting Vuetify's application class */
+    font-size: 0.9rem;
+  }

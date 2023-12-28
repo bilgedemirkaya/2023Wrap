@@ -9,6 +9,7 @@
           :label="option"
           :value="option"
           hide-details
+          hide-spin-buttons
         ></v-checkbox>
         <v-text-field
           v-if="selectedOptions.includes('Other')"

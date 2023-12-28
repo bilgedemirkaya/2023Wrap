@@ -13,6 +13,11 @@ const router = createRouter({
       path: '/result',
       name: 'result',
       component: () => import('../views/ResultView.vue')
+    },
+    {
+      path: '/privacy-policy',
+      name: 'privacy-policy',
+      component: () => import('../views/PrivacyPolicy.vue')
     }
   ]
 })

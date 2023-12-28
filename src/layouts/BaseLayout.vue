@@ -1,6 +1,6 @@
 <template>
     <v-app id="inspire">
-        <v-toolbar app fixed clipped-left>
+        <v-toolbar app fixed clipped-left v-if="currentRoute.path !== '/result'">
             <v-toolbar-side-icon @click.stop="toggleDrawer"></v-toolbar-side-icon>
             <v-toolbar-title class="toolbar-title -override">
                 <slot name="toolbar-title">2023: What the heck?!</slot>
@@ -22,7 +22,9 @@
 <script setup>
 import { ref } from 'vue';
 import SupportMeLink from "@/components/SupportMeLink.vue";
+import { useRoute } from 'vue-router';
 
+const currentRoute = useRoute();
 const drawer = ref(false);
 
 const toggleDrawer = () => {
@@ -35,6 +37,12 @@ const toggleDrawer = () => {
     font-size: 1.85rem;
     margin-inline-start: 3rem;
 }
+
+@media (max-width: 480px) {
+    .toolbar-title.-override {
+        text-align: center;
+    }
+    }
 
 .github-icon {
     margin-right: 8px;
