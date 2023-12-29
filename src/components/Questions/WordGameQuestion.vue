@@ -1,8 +1,8 @@
 <template>
   <div>
     <p>{{ question.text }}</p>
-    <div class="word-cloud">
-      <img src="@/assets/wordcloud.png" alt="Word Cloud" >
+    <div class="word-game">
+      <img src="@/assets/wordgame.png" alt="Word Cloud" class="word-image" id="word-image">
     </div>
     <v-text-field
       v-model="selectedWords"
@@ -14,7 +14,7 @@
 </template>
 
 <script setup>
-import { ref, computed, watch } from 'vue';
+import { ref, computed, watch, onMounted } from 'vue';
 
 const props = defineProps(['question']);
 const emit = defineEmits(['answer']);
@@ -29,17 +29,41 @@ const processedWords = computed(() => {
 watch(processedWords, (newVal) => {
   emit('answer', newVal);
 });
+
+onMounted(() => {
+  const wordImage = document.getElementById('word-image');
+  wordImage.addEventListener('click', function() {
+    this.classList.toggle('enlarged');
+  });
+});
 </script>
 
 <style scoped>
-.word-cloud {
+.word-game {
   text-align: center;
-}
-.word-cloud img {
-  max-width: 67%;
-  max-height: 40rem;
 }
 .input-text {
   margin-top: 1rem;
 }
+
+.word-image {
+  width: 100vh;
+  height: auto;
+  transition: transform 0.3s ease; /* Smooth transition for the transformation */
+  cursor: pointer; /* Change cursor to indicate the image is clickable */
+}
+
+
+
+@media (max-width: 600px) {
+  .word-image {
+    max-width: 60vh;
+  }
+
+  .enlarged {
+  transform: scale(1.5); /* Enlarge the image to 150% of its original size */
+}
+}
+
+
 </style>

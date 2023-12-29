@@ -40,12 +40,9 @@ app.post('/generate-image', async (req, res) => {
 
 app.post('/generate-prediction', async (req, res) => {
     try {
-      const { userData } = req.body;
+      const { predictionPrompt } = req.body;
 
-      // Construct a prompt using userData
-      const prompt = `Based on the following user data: ${JSON.stringify(userData)}, create a fun and insightful prediction for their 2024:`;
-
-      const completion = await openai.chat.completions.create({
+/*       const completion = await openai.chat.completions.create({
         messages: [
           {
             role: "system",
@@ -55,9 +52,9 @@ app.post('/generate-prediction', async (req, res) => {
         ],
         model: "gpt-3.5-turbo-1106",
         response_format: { type: "json_object" },
-      });
+      }); */
 
-      res.json({ prediction: completion.choices[0].message.content });
+      res.json({ prediction: predictionPrompt });
     } catch (error) {
       console.error('Error with OpenAI API:', error);
       res.status(500).send('Error generating prediction');

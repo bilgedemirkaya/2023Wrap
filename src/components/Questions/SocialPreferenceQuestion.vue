@@ -42,7 +42,7 @@ const socialLabel = computed(() => {
 });
 
 watch(socialPreference, (newVal) => {
-  emit("answer", socialLabel.value);
+  emit("answer", newVal);
 });
 </script>
 

@@ -41,6 +41,11 @@ const vuetify = createVuetify({
       size: 'large',
     },
   },
+  locale: {
+    messages: {
+      loading: 'Loading prediction...',
+    },
+  },
 });
 
 const app = createApp(App);

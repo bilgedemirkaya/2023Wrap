@@ -1,7 +1,7 @@
 <template>
   <v-dialog width="500">
     <template v-slot:activator="{ props }">
-      <v-btn v-bind="props" text="Give Feedback"> </v-btn>
+      <v-btn v-bind="props" text="Give Feedback" class="feedback-button"> </v-btn>
     </template>
 
     <template v-slot:default="{ isActive }">
@@ -44,7 +44,13 @@ const submit = async () => {
 </script>
 
 <style scoped>
-.headline {
-  text-align: center;
+.feedback-button {
+  color: #000000;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  display: block;
+  margin: 20px auto; /* Center button */
 }
 </style>

@@ -11,7 +11,7 @@ export const useQuestionnaireStore = defineStore("questionnaire", {
       {
         id: "RatingQuestion",
         text: "How would you rate your year overall?",
-        response: 0,
+        response: 5,
         preText: "",
       },
       {
@@ -62,11 +62,12 @@ export const useQuestionnaireStore = defineStore("questionnaire", {
           "Distracting myself with hobbies or work",
           "Not managing it at all",
         ],
+        preText: "",
       },
       {
         id: "SocialPreferenceQuestion",
         text: "Would you describe yourself as more of an introvert or an extrovert?",
-        response: "",
+        response: 5,
         preText: "",
       },
       {
@@ -109,7 +110,7 @@ export const useQuestionnaireStore = defineStore("questionnaire", {
       {
         id: "HopeQuestion",
         text: "It's only a milestone if you make it one.. How hopeful are you about the upcoming year?",
-        response: "",
+        response: 5,
         preText: "",
       },
     ],
@@ -119,6 +120,7 @@ export const useQuestionnaireStore = defineStore("questionnaire", {
       rating: 0,
       feedbackText: "",
     },
+    predictionText: "",
   }),
 
   actions: {
@@ -141,6 +143,7 @@ export const useQuestionnaireStore = defineStore("questionnaire", {
             email: this.userEmail,
             currentIndex: this.currentIndex,
             questions,
+            predictionText: this.predictionText,
           });
         } catch (error) {
           console.error("Error saving state to Firestore:", error);
@@ -150,47 +153,45 @@ export const useQuestionnaireStore = defineStore("questionnaire", {
     async loadStateFromFirestore() {
       if (this.userEmail) {
         try {
-          const docRef = doc(db, 'questionnaires', this.userEmail);
+          const docRef = doc(db, "questionnaires", this.userEmail);
           const docSnap = await getDoc(docRef);
           if (docSnap.exists()) {
             const state = docSnap.data();
 
             this.currentIndex = state.currentIndex;
             this.questions = state.questions;
-            this.username = state.username
+            this.username = state.username;
           }
         } catch (error) {
           console.error("Error loading state from Firestore:", error);
         }
-      console.log('RETRIEVED DATA', this.questions, this.currentIndex)
       }
     },
-    nextQuestion(response) {
-      const questionId = this.questions[this.currentIndex].id;
-      response && this.updateResponse(questionId, response);
+    nextQuestion({ response, preText }) {
+      if (response) {
+        this.questions[this.currentIndex].response = response;
+      }
       this.currentIndex += 1;
+
+      const nextQuestion = this.questions[this.currentIndex];
+      nextQuestion.preText = preText;
+
+      this.saveStateToFirestore(this.questions);
     },
 
     previousQuestion() {
       this.currentIndex -= 1;
     },
 
-    async updateResponse(questionId, response) {
-      const question = this.questions.find((q) => q.id === questionId);
-      if (question) {
-        question.response = response;
-      }
-
-    this.saveStateToFirestore(this.questions);
+    async finishTest(response) {
+      this.questions[10].response = response;
+      this.createPrediction();
+      this.saveStateToFirestore(this.questions);
+      this.clearState();
     },
 
-    updatePreText(questionId, preText) {
-      const question = this.questions.find((q) => q.id === questionId);
-      if (question) {
-        question.preText = preText;
-      }
-
-      this.saveStateToFirestore(this.questions);
+    updateLastQuestion(response) {
+      this.questions[10].response = response;
     },
 
     updateUserEmail(email) {
@@ -202,7 +203,9 @@ export const useQuestionnaireStore = defineStore("questionnaire", {
     },
 
     async createImageWithDallE() {
-      const keywords = this.questions.find(q => q.id === "WordGameQuestion").response || "love";
+      const keywords =
+        this.questions.find((q) => q.id === "WordGameQuestion").response ||
+        "love";
       const prompt = `Create a tarot card image based on these keywords: ${keywords}`;
       try {
         const response = await fetch(`${apiEndpoint}/generate-image`, {
@@ -217,7 +220,6 @@ export const useQuestionnaireStore = defineStore("questionnaire", {
           throw new Error("Network response was not ok", response);
         }
         const data = await response.json();
-        console.log('await response.json()', data,);
 
         return data.imageUrl; // This is the URL of the generated image
       } catch (error) {
@@ -227,32 +229,55 @@ export const useQuestionnaireStore = defineStore("questionnaire", {
     },
 
     async createPrediction() {
-      // Collect or summarize the user responses to be sent to the backend
-      const userData = this.questions.map(q => ({
-        question: q.text,
-        response: q.response
-      }));
-
+      const predictionPrompt = this.createPrompt();
       try {
         const response = await fetch(`${apiEndpoint}/generate-prediction`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ userData }),
+          body: JSON.stringify({ predictionPrompt }),
         });
 
         if (!response.ok) {
           throw new Error("Network response was not ok", response);
         }
         const data = await response.json();
-        console.log('Prediction response:', data);
+        console.log("Prediction response:", data);
 
         return data.prediction.message; // This is the generated prediction text
       } catch (error) {
         console.error("Error generating prediction:", error);
         // Handle errors appropriately in your application
       }
+    },
+
+    createPrompt() {
+      // Collect or summarize the user responses to be sent to the backend
+      const yearRate = this.questions[0].response.toFixed(2);
+      const feelings = this.questions[1].response.join(",");
+      const significantExperiences = this.questions[3].response.join(",");
+      const reactionToChanges = `they ${this.questions[4].response}`;
+      const manageStress = stressManagementArray.includes("Not managing it at all")
+      ? `struggle managing stress but they also ${stressManagementArray
+          .filter(option => option !== "Not managing it at all")
+          .join(", ")}`
+      : 'manage stress by ' + stressManagementArray.join(", ");
+      const extrovertScale = this.questions[6].response.toFixed(2);
+      const resonateStatements = this.questions[7].response.join(",");
+      const personalGrowth = this.questions[8].response.join(",");
+      const resolutions = this.questions[9].response.join(",");
+
+      const promptDraft = `You will act as an expert in tarot card reading, providing a personalized 2024 prediction for a user based on their reflections from 2023.
+      The user has rated their year overall as ${yearRate} out of 10, deeply experiencing emotions like ${feelings}. They encountered life-changing events such as ${significantExperiences} and
+      typically react to new changes as ${reactionToChanges}.
+      To manage stress or challenges, they often ${manageStress}.
+      Identifying themselves as ${extrovertScale} out of 10 on the introvert-extrovert scale (0 being really introvert, 10 being really extrovert), they resonate with the statements: ${resonateStatements}.
+      Their focus for the coming year is on ${personalGrowth}, with resolutions including ${resolutions}.
+      Your tarot reading should weave these details into a narrative that offers insights and guidance for 2024.
+      It should be uplifting and straightforward, emphasizing growth and resilience, while acknowledging the intricacies of their past year.`;
+
+      return promptDraft;
     },
 
     updateUserEmail(email) {
@@ -263,25 +288,23 @@ export const useQuestionnaireStore = defineStore("questionnaire", {
     async submitFeedback(rating, feedbackText) {
       try {
         // Save feedback to database
-        const feedbackRef = doc(db, 'questionnaires', this.userEmail);
+        const feedbackRef = doc(db, "questionnaires", this.userEmail);
         await updateDoc(feedbackRef, {
           feedback: {
             rating: rating.value,
-            text: feedbackText.value
-          }
+            text: feedbackText.value,
+          },
         });
-
       } catch (error) {
         console.error("Error submitting feedback:", error);
       }
     },
-
     clearState() {
       this.currentIndex = 0;
       this.responses = {};
       this.username = "";
       this.userEmail = "";
-      localStorage.removeItem('userEmail');
-    }
+      localStorage.removeItem("userEmail");
+    },
   },
 });

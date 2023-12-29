@@ -18,7 +18,7 @@ import { ref, computed, watch } from 'vue';
 const props = defineProps(['question']);
 const emit = defineEmits(['answer']);
 
-const response = ref(0);
+const response = ref(5);
 
 const sliderColor = computed(() => {
   if (response.value <= 3) {
