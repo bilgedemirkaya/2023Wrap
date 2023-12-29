@@ -24,12 +24,13 @@ import { ref, onBeforeMount } from 'vue';
 const store = useQuestionnaireStore();
 const isTestStarted = ref(false);
 
-onBeforeMount(() => {
-  store.loadStateFromLocalStorage();
+onBeforeMount(async () => {
+  await store.initialize();
   isTestStarted.value = !!store.username;
 })
 
-function startTest() {
+function startTest(email) {
+  store.updateUserEmail(email);
   isTestStarted.value = true;
 }
 
