@@ -59,7 +59,6 @@ app.post('/generate-prediction', async (req, res) => {
       res.status(500).send('Error generating prediction');
   }
 });
-app.listen(process.env.PORT);
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
