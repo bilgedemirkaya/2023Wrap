@@ -263,7 +263,7 @@ export const useQuestionnaireStore = defineStore("questionnaire", {
           throw new Error("Network response was not ok", response);
         }
         const data = await response.json();
-        const result = JSON.parse(data.prediction);
+        const result = JSON.parse(data.prediction.replace(/\\\"/g, "\""));
         this.prediction.introduction = result.introduction;
         this.prediction.cards = result.cards;
         this.prediction.predictionText = result.predictionText;

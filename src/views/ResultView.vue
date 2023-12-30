@@ -70,7 +70,9 @@
       </v-row>
     </v-container>
     <v-container v-else-if="!store.prediction.predictionText">
-      Sorry, due to a server error, I could not render your response. I will send your prediction to your email."
+      <v-row>
+        Sorry, due to a server error, I could not render your response. I will send your prediction to your email.
+      </v-row>
     </v-container>
     <div class="feedback-container" v-if="!store.isLoading">
       <p>
