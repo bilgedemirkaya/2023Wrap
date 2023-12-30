@@ -110,7 +110,7 @@ function previousQuestion() {
 }
 
 async function finishTest() {
-  await store.finishTest(answer.value);
+  store.finishTest(answer.value);
   router.push('/result');
 }
 </script>

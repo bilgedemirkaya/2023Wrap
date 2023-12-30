@@ -204,7 +204,7 @@ export const useQuestionnaireStore = defineStore("questionnaire", {
 
     async finishTest(response) {
       this.questions[10].response = response ?? 5;
-      this.createPrediction();
+      await this.createPrediction();
       this.saveStateToFirestore(this.questions);
       this.clearState();
     },
