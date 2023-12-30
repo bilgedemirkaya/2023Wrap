@@ -31,7 +31,7 @@
               <v-img
                 :src="getCardImage(index)"
                 :width="300"
-                :height="450"
+                :height="350"
                 aspect-ratio="0.66"
                 class="mx-auto"
               />
@@ -243,7 +243,6 @@ const shareOnInstagram = (card) => {
   display: flex;
   justify-content: center;
   gap: 15px;
-  margin-top: 35px;
 }
 
 .prediction-title {
@@ -276,16 +275,6 @@ const shareOnInstagram = (card) => {
   margin: 20px 0;
 }
 
-.tarot-card {
-  transition: transform 0.6s;
-  transform-style: preserve-3d;
-  cursor: pointer;
-}
-
-.tarot-card:hover {
-  transform: scale(1.05);
-}
-
 .tarot-card-front,
 .tarot-card-back {
   backface-visibility: hidden;
@@ -306,7 +295,7 @@ const shareOnInstagram = (card) => {
   display: grid;
   justify-content: center;
   max-width: 300px;
-  height: 80vh;
+  height: 70vh;
   margin: 1rem auto;
   padding: 1rem;
   box-shadow: 0 4px 6px rgba(0,0,0,0.1);
@@ -344,6 +333,12 @@ const shareOnInstagram = (card) => {
   text-align: center;
 }
 
+.v-card-text {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
 @media (max-width: 768px) {
   .tarot-card {
     max-width: 90%;
@@ -352,13 +347,4 @@ const shareOnInstagram = (card) => {
   }
 }
 
-
-.back-card {
-  align-items: center;
-  margin: auto;
-}
-
-.details-text {
-  margin-top: 50%;
-}
 </style>

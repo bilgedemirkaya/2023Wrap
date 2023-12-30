@@ -122,7 +122,7 @@ const startTest = () => {
 
 @media (max-width: 480px) {
   .helper-text {
-    margin-bottom: 1rem;
+    margin-bottom: 3rem;
   }
 }
 </style>

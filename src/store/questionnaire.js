@@ -115,7 +115,7 @@ export const useQuestionnaireStore = defineStore("questionnaire", {
       },
       {
         id: "NewYearResolutionQuestion",
-        text: "Let's mentally start preparing for the new year. What are two resolutions you'd like to set for yourself?",
+        text: "Let's mentally start preparing for the new year. What are the resolutions you'd like to set for yourself?",
         response: "",
         preText: "",
         type: 'text',
@@ -203,7 +203,7 @@ export const useQuestionnaireStore = defineStore("questionnaire", {
     },
 
     async finishTest(response) {
-      this.questions[10].response = response;
+      this.questions[10].response = response ?? 5;
       this.createPrediction();
       this.saveStateToFirestore(this.questions);
       this.clearState();

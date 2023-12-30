@@ -1,20 +1,22 @@
 <template>
   <p>{{ question.text }}</p>
   <div class="question-container">
-    <!-- First resolution dropdown -->
-    <v-select v-model="selectedResolution1" :items="resolutionOptions" label="Select your New Year's resolution" />
-    <v-text-field v-if="isOtherSelected1" v-model="customResolution1" label="What's your resolution?"
-      placeholder="Type your custom resolution"></v-text-field>
-
-    <!-- Second resolution dropdown -->
-    <v-select v-model="selectedResolution2" :items="resolutionOptions" label="Select your second New Year's resolution"/>
-    <v-text-field v-if="isOtherSelected2" v-model="customResolution2" label="What's your resolution?"
-      placeholder="Type your custom resolution"></v-text-field>
+    <div v-for="(resolution, index) in resolutions" :key="index" class="select-container">
+      <v-select v-model="resolution.selected" :items="resolutionOptions" label="Select your New Year's resolution" />
+      <!-- Custom resolution input field -->
+      <v-text-field v-if="resolution.isOtherSelected" v-model="resolution.custom" label="What's your resolution?"
+        placeholder="Type your custom resolution"></v-text-field>
+      <v-btn icon size="x-small" class="remove-btn" color="" v-if="resolutions.length > 1" @click="removeResolution(index)">
+        <v-icon>mdi-close</v-icon>
+      </v-btn>
+    </div>
+    <!-- Add button -->
+    <v-btn @click="addResolution" size="small" color="green">Add another resolution</v-btn>
   </div>
 </template>
 
 <script setup>
-import { ref, watch} from 'vue';
+import { reactive, watch} from 'vue';
 
 const props = defineProps(["question"]);
 const emit = defineEmits(["answer"]);
@@ -30,44 +32,75 @@ const resolutionOptions = [
   "I want to type something else",
 ];
 
-const selectedResolution1 = ref('');
-const customResolution1 = ref('');
-const isOtherSelected1 = ref(false);
+const resolutions = reactive([createResolution()]);
 
-const selectedResolution2 = ref('');
-const customResolution2 = ref('');
-const isOtherSelected2 = ref(false);
+function createResolution() {
+  return {
+    selected: '',
+    custom: '',
+    isOtherSelected: false,
+  };
+}
 
-watch(selectedResolution1, () => {
-  if (selectedResolution1.value === "I want to type something else") {
-    isOtherSelected1.value = true;
-    customResolution1.value = ''; // Reset custom resolution input
-  }
+function addResolution() {
+  resolutions.push(createResolution());
+}
+
+
+function removeResolution(index) {
+  resolutions.splice(index, 1);
+}
+
+watch(resolutions, () => {
+  resolutions.forEach(resolution => {
+    if (resolution.selected === "I want to type something else") {
+      resolution.isOtherSelected = true;
+    } else {
+      resolution.isOtherSelected = false;
+    }
+  });
   handleResolutionChange();
-})
+}, { deep: true });
 
-watch(selectedResolution2, () => {
-  if (selectedResolution2.value === "I want to type something else") {
-    isOtherSelected2.value = true;
-    customResolution2.value = ''; // Reset custom resolution input
-  }
-  handleResolutionChange();
-})
 
 const handleResolutionChange = () => {
+  const userResolutions = resolutions.map(resolution =>
+    resolution.isOtherSelected ? resolution.custom : resolution.selected
+  ).filter(Boolean); // Filter out empty strings
 
-  // Emit the selected or custom resolutions as an answer
-  const resolutions = [
-    isOtherSelected1.value ? customResolution1.value : selectedResolution1.value,
-    isOtherSelected2.value ? customResolution2.value : selectedResolution2.value
-  ].filter(Boolean); // Filter out empty strings
-
-  emit("answer", resolutions);
+  emit("answer", userResolutions);
 };
+
 </script>
 
 <style scoped>
 .question-container {
   margin: 3rem 0;
 }
+
+.select-container {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+@media (max-width: 480px) {
+  .select-container {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .select-container .v-select,
+  .select-container .v-text-field {
+    flex-grow: 1;
+    width: calc(100% - 30px); /* Adjust width to account for the gap */
+  }
+
+  .select-container .remove-btn {
+    margin-left: auto;
+    margin-right: 0;
+    order: -1; /* Place the button before the v-select and v-text-field */
+  }
+}
+
 </style>
