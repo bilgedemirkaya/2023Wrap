@@ -57,7 +57,7 @@ onMounted(() => {
 
 @media (max-width: 600px) {
   .word-image {
-    max-width: 60vh;
+    max-width: 55vh;
   }
 
   .enlarged {
