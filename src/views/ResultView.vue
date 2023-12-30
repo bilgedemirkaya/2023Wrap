@@ -27,7 +27,6 @@
             outlined
             @click="flipCard(index)"
             color="#ffffff"
-            v-tooltip.bottom="'Click to flip'"
           >
             <v-card-text v-if="!isCardFlipped(index)">
               <v-img
@@ -37,7 +36,11 @@
                 aspect-ratio="0.66"
                 class="mx-auto"
               />
-              <v-card-title class="text-h5">{{ card.name }}</v-card-title>
+              <div class="card-title-container">
+                <v-card-title class="text-h5">{{ card.name }}</v-card-title>
+
+                <v-icon class="tap-icon">mdi-hand-pointing-up</v-icon>
+            </div>
             </v-card-text>
             <v-card-text v-else>
               <p class="details-text">{{ card.details }}</p>
@@ -71,7 +74,7 @@
       <p>
         Thank you for participating in the journey! Your predictions and tarot
         image were uniquely created using DALL·E and GPT-3.5-turbo models, based
-        on your answers. Any feedback is highly appreciated.
+        on your answers.
       </p>
       <FeedbackForm />
       <v-btn text="Try Again" @click="startOver()"> </v-btn>
@@ -306,13 +309,14 @@ function startOver() {
   height: 70vh;
   margin: 1rem auto;
   padding: 1rem;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.558);
   border-radius: 8px;
   transition: box-shadow 0.3s ease-in-out;
 }
 
 .tarot-card:hover {
-  box-shadow: 0 6px 10px rgba(0,0,0,0.15);
+  transform: scale(1.1);
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.417);
 }
 
 .prediction-text, .tarot-reading {
@@ -332,8 +336,22 @@ function startOver() {
   padding: 2rem;
 }
 
+.card-title-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tap-icon {
+  margin-right: 8px;
+}
+
+.tap-label {
+  font-size: 0.8rem;
+  color: #333;
+}
+
 .text-h5 {
-  margin-top: 1rem;
   font-size: 1.5rem;
   font-weight: bold;
   color: #333;
