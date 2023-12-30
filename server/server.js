@@ -3,7 +3,7 @@ import OpenAI from 'openai';
 import cors from 'cors';
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 // Configure the OpenAI library with your API key
 const openai = new OpenAI({apiKey: process.env.OPENAI_API_KEY});
@@ -59,7 +59,7 @@ app.post('/generate-prediction', async (req, res) => {
       res.status(500).send('Error generating prediction');
   }
 });
-
+app.listen(process.env.PORT);
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
