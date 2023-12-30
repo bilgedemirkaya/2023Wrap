@@ -69,6 +69,9 @@
         </v-col>
       </v-row>
     </v-container>
+    <v-container v-else-if="!store.prediction.predictionText">
+      Sorry, due to a server error, I could not render your response. I will send your prediction to your email."
+    </v-container>
     <div class="feedback-container" v-if="!store.isLoading">
       <p>
         Thank you for participating in the journey! Your predictions and tarot

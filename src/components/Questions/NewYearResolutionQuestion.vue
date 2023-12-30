@@ -11,7 +11,7 @@
       </v-btn>
     </div>
     <!-- Add button -->
-    <v-btn @click="addResolution" size="small" color="green">Add another resolution</v-btn>
+    <v-btn @click="addResolution" size="small">Add another resolution</v-btn>
   </div>
 </template>
 

@@ -110,8 +110,8 @@ function previousQuestion() {
 }
 
 async function finishTest() {
-  store.finishTest(answer.value);
   router.push('/result');
+  store.finishTest(answer.value);
 }
 </script>
 
