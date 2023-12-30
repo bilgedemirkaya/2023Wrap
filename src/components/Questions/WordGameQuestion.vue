@@ -47,7 +47,7 @@ onMounted(() => {
 }
 
 .word-image {
-  width: 100vh;
+  width: 90vh;
   height: auto;
   transition: transform 0.3s ease; /* Smooth transition for the transformation */
   cursor: pointer; /* Change cursor to indicate the image is clickable */

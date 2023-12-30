@@ -1,6 +1,5 @@
 <template>
   <div class="result-page">
-    {{  store.userEmail }}
     <Loading v-if="store.isLoading"/>
     <v-container
       v-else-if="store.prediction.predictionText"
@@ -39,7 +38,7 @@
               <div class="card-title-container">
                 <v-card-title class="text-h5">{{ card.name }}</v-card-title>
 
-                <v-icon class="tap-icon">mdi-hand-pointing-up</v-icon>
+                <v-icon class="tap-icon">mdi-gesture-tap</v-icon>
             </div>
             </v-card-text>
             <v-card-text v-else>
@@ -228,45 +227,11 @@ function startOver() {
   padding: 2rem;
 }
 
-.prediction-text {
-  padding: 30px;
-  margin: 30px 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  max-height: 70vh;
-  overflow: hidden;
-  color: #ffffff;
-  border-radius: 8px;
-}
-
-.share-button {
-  margin-top: 20px;
-  margin-right: 8px;
-  color: #fff;
-}
-.v-icon {
-  font-size: 24px;
-}
 
 .share-buttons {
   display: flex;
   justify-content: center;
   gap: 15px;
-}
-
-.prediction-title {
-  color: #ffffff;
-  text-align: center;
-  font-size: 2em;
-  margin-bottom: 16px;
-}
-
-.overlay {
-  position: relative;
-  padding: 20px;
-  text-align: center;
 }
 
 .share-buttons button {
@@ -280,28 +245,6 @@ function startOver() {
     min-height: 125vh;
   }
 }
-.central-text {
-  flex-basis: 100%;
-  text-align: center;
-  margin: 20px 0;
-}
-
-.tarot-card-front,
-.tarot-card-back {
-  backface-visibility: hidden;
-  position: absolute;
-  width: 100%;
-  height: 100%;
-}
-
-.tarot-card-front {
-  transform: rotateY(0deg);
-}
-
-.tarot-card-back {
-  transform: rotateY(180deg);
-}
-
 .tarot-card {
   display: grid;
   justify-content: center;
@@ -319,7 +262,7 @@ function startOver() {
   box-shadow: 0 6px 10px rgba(0, 0, 0, 0.417);
 }
 
-.prediction-text, .tarot-reading {
+.tarot-reading {
   background: rgba(255, 255, 255, 0.8);
   padding: 2rem;
   border-radius: 15px;
@@ -346,25 +289,16 @@ function startOver() {
   margin-right: 8px;
 }
 
-.tap-label {
-  font-size: 0.8rem;
-  color: #333;
-}
-
-.text-h5 {
-  font-size: 1.5rem;
+.text-h5, {
+  font-size: 1.2rem;
   font-weight: bold;
   color: #333;
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
   text-align: center;
 }
-
-.v-card-text {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
+.details-text {
+  margin: 3rem 0;
 }
-
 @media (max-width: 768px) {
   .tarot-card {
     max-width: 90%;
@@ -373,18 +307,14 @@ function startOver() {
   }
 
   .text-h5 {
-    font-size: 1.2rem;
-  }
-
-  .v-icon {
-    font-size: 20px;
+    font-size: 1.1rem;
   }
 
   .share-buttons {
     justify-content: space-around;
   }
 
-  .prediction-text, .tarot-reading {
+  .tarot-reading {
     padding: 1rem;
   }
 
