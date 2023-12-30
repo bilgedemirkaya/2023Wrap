@@ -25,7 +25,8 @@ const resolutionOptions = [
   "Travel abroad",
   "Build something cool",
   "Save/invest money",
-  "Be happy",
+  "Make myself happy",
+  "Make mom proud",
   "Survive",
   "I want to type something else",
 ];

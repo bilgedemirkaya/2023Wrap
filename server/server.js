@@ -39,27 +39,30 @@ app.post('/generate-image', async (req, res) => {
 });
 
 app.post('/generate-prediction', async (req, res) => {
-    try {
+  try {
       const { predictionPrompt } = req.body;
 
-/*       const completion = await openai.chat.completions.create({
-        messages: [
-          {
-            role: "system",
-            content: "You are a helpful assistant designed to output JSON.",
-          },
-          { role: "user", content: "Who won the world series in 2020?" },
-        ],
-        model: "gpt-3.5-turbo-1106",
-        response_format: { type: "json_object" },
-      }); */
+      const completion = await openai.chat.completions.create({
+          messages: [
+              {
+                  role: "system",
+                  content: "You are an expert tarot card reader skilled in interpreting five-card spreads.present your interpretation in a casual tone and format your response as JSON output. This output should include an introduction analyzing the year based on the selected emotions, the details of the cards in an array, and a prediction about my future ",
+              },
+              { role: "user", content: predictionPrompt },
+          ],
+          model: "gpt-3.5-turbo",
+      });
 
-      res.json({ prediction: predictionPrompt });
-    } catch (error) {
+      console.log('completion is', completion.choices[0].message);
+
+      // Assuming the prediction is returned in completion.data.choices[0].message.content
+      res.json({ prediction: completion.choices[0].message.content });
+  } catch (error) {
       console.error('Error with OpenAI API:', error);
       res.status(500).send('Error generating prediction');
-    }
+  }
 });
+
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);

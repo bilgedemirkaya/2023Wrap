@@ -80,7 +80,7 @@ export const useQuestionnaireStore = defineStore("questionnaire", {
           "I'm passionate in relationships and working on balancing my emotions.",
           "I enjoy my independence and making my own decisions.",
           "I'm a natural caregiver but often forget about myself.",
-          "No matter how hard I try, I doubt my ability to make a change in my life.",
+          "No matter how hard I try, I doubt my ability to make a change in life.",
         ],
         preText: "",
       },
@@ -103,7 +103,7 @@ export const useQuestionnaireStore = defineStore("questionnaire", {
       },
       {
         id: "NewYearResolutionQuestion",
-        text: "Let's mentally start preparing for the new year. What are three resolutions you'd like to set for yourself?",
+        text: "Let's mentally start preparing for the new year. What are two resolutions you'd like to set for yourself?",
         response: "",
         preText: "",
       },
@@ -253,22 +253,21 @@ export const useQuestionnaireStore = defineStore("questionnaire", {
     },
 
     createPrompt() {
-      // Collect or summarize the user responses to be sent to the backend
       const yearRate = this.questions[0].response.toFixed(2);
       const feelings = this.questions[1].response.join(",");
       const significantExperiences = this.questions[3].response.join(",");
       const reactionToChanges = `they ${this.questions[4].response}`;
-      const manageStress = stressManagementArray.includes("Not managing it at all")
-      ? `struggle managing stress but they also ${stressManagementArray
+      const manageStress = this.questions[5].response.includes("Not managing it at all")
+      ? `struggle managing stress but they also ${this.questions[5].response
           .filter(option => option !== "Not managing it at all")
           .join(", ")}`
-      : 'manage stress by ' + stressManagementArray.join(", ");
+      : 'manage stress by ' + this.questions[5].response.join(", ");
       const extrovertScale = this.questions[6].response.toFixed(2);
       const resonateStatements = this.questions[7].response.join(",");
       const personalGrowth = this.questions[8].response.join(",");
       const resolutions = this.questions[9].response.join(",");
 
-      const promptDraft = `You will act as an expert in tarot card reading, providing a personalized 2024 prediction for a user based on their reflections from 2023.
+      const promptDraft = `Provide a personalized 2024 prediction for a user based on their reflections from 2023. You can make some analysis for their year and unexpected predictions about their next year based on the answers.
       The user has rated their year overall as ${yearRate} out of 10, deeply experiencing emotions like ${feelings}. They encountered life-changing events such as ${significantExperiences} and
       typically react to new changes as ${reactionToChanges}.
       To manage stress or challenges, they often ${manageStress}.
@@ -299,6 +298,32 @@ export const useQuestionnaireStore = defineStore("questionnaire", {
         console.error("Error submitting feedback:", error);
       }
     },
+
+    getTarotCardDetails() {
+      return [
+        {
+          id: 1,
+          predictionText: 'Pred1',
+          imageUrl: '../assets/tarot-1.png'
+        },
+        {
+          id: 2,
+          predictionText: 'Pred2',
+          imageUrl: '.,/assets/tarot-2.png'
+        },
+        {
+          id: 3,
+          predictionText: 'Pred3',
+          imageUrl: '../assets/tarot-3.png'
+        },
+        {
+          id: 4,
+          predictionText: 'Pred4',
+          imageUrl: '../assets/tarot-4.png'
+        },
+      ]
+    },
+
     clearState() {
       this.currentIndex = 0;
       this.responses = {};
