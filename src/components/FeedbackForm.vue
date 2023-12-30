@@ -10,6 +10,7 @@
           <div class="stars">
             <v-rating v-model="rating" dense color="yellow" large ></v-rating>
           </div>
+          <v-text-field hide-details v-model="name" label="Your name" required></v-text-field>
           <v-textarea
             label="Your feedback"
             hint="Optional"
@@ -21,7 +22,10 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn text @click="isActive.value = false" color="">Cancel</v-btn>
-          <v-btn @click="submit">Submit</v-btn>
+          <v-btn @click="() => {
+            isActive.value = false;
+            submit();
+            }">Submit</v-btn>
         </v-card-actions>
       </v-card>
     </template>
@@ -35,11 +39,12 @@ import { useQuestionnaireStore } from "@/store/questionnaire";
 const store = useQuestionnaireStore();
 const isActive = ref(false);
 const rating = ref(0);
+const name = ref('');
 const feedbackText = ref("");
 
 const submit = async () => {
   isActive.value = false;
-  await store.submitFeedback(rating.value, feedbackText.value);
+  await store.submitFeedback(name.value, rating.value, feedbackText.value);
 };
 </script>
 

@@ -1,5 +1,6 @@
 <template>
   <div class="result-page">
+    {{  store.userEmail }}
     <Loading v-if="store.isLoading"/>
     <v-container
       v-else-if="store.prediction.predictionText"
@@ -72,6 +73,7 @@
         on your answers. Any feedback is highly appreciated.
       </p>
       <FeedbackForm />
+      <v-btn text="Try Again" @click="startOver()"> </v-btn>
     </div>
   </div>
 </template>
@@ -206,6 +208,11 @@ const shareOnInstagram = (card) => {
       alert("Error in sharing. Please try again.");
     });
   }
+
+function startOver() {
+  store.clearState();
+  router.push('/');
+}
 </script>
 
 <style scoped>

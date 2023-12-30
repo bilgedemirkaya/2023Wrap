@@ -52,6 +52,7 @@ const toggleDrawer = () => {
   .toolbar-title.-override {
     margin-inline-start: 4rem;
   }
+}
 
 .github-icon {
   margin-right: 8px;

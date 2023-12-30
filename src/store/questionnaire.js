@@ -13,21 +13,21 @@ export const useQuestionnaireStore = defineStore("questionnaire", {
         text: "How would you rate your year overall?",
         response: 5,
         preText: "",
-        type: 'rate',
+        type: "rate",
       },
       {
         id: "EmotionSelectQuestion",
         text: "Can you pick the emotions you felt deeply this year?",
         response: [],
         preText: "",
-        type: 'text',
+        type: "text",
       },
       {
         id: "WordGameQuestion",
         text: "",
         response: "",
         preText: "",
-        type: 'text',
+        type: "text",
       },
       {
         id: "LifeChangingEventQuestion",
@@ -46,14 +46,14 @@ export const useQuestionnaireStore = defineStore("questionnaire", {
           "Other",
         ],
         preText: "",
-        type: 'select',
+        type: "select",
       },
       {
         id: "ReactToChangeQuestion",
         text: "How do you typically react to significant changes in your life?",
         response: "",
         preText: "",
-        type: 'text',
+        type: "text",
       },
       {
         id: "StressManagementQuestion",
@@ -69,14 +69,14 @@ export const useQuestionnaireStore = defineStore("questionnaire", {
           "Not managing it at all",
         ],
         preText: "",
-        type: 'select',
+        type: "select",
       },
       {
         id: "SocialPreferenceQuestion",
         text: "Would you describe yourself as more of an introvert or an extrovert?",
         response: 5,
         preText: "",
-        type: 'rate',
+        type: "rate",
       },
       {
         id: "PersonalTraitQuestion",
@@ -89,9 +89,9 @@ export const useQuestionnaireStore = defineStore("questionnaire", {
           "I enjoy my independence and making my own decisions.",
           "I'm a natural caregiver but often forget about myself.",
           "No matter how hard I try, I doubt my ability to make a change in life.",
-          "I often reflect on my experiences, seeking lessons in every challenge."
+          "I often reflect on my experiences, seeking lessons in every challenge.",
         ],
-        type: 'select',
+        type: "select",
         preText: "",
       },
 
@@ -111,21 +111,21 @@ export const useQuestionnaireStore = defineStore("questionnaire", {
           "Other",
         ],
         preText: "",
-        type: 'select',
+        type: "select",
       },
       {
         id: "NewYearResolutionQuestion",
         text: "Let's mentally start preparing for the new year. What are the resolutions you'd like to set for yourself?",
         response: "",
         preText: "",
-        type: 'text',
+        type: "text",
       },
       {
         id: "HopeQuestion",
         text: "It's only a milestone if you make it one.. How hopeful are you about the upcoming year?",
         response: 5,
         preText: "",
-        type: 'rate',
+        type: "rate",
       },
     ],
     username: "",
@@ -263,7 +263,6 @@ export const useQuestionnaireStore = defineStore("questionnaire", {
           throw new Error("Network response was not ok", response);
         }
         const data = await response.json();
-
         const result = JSON.parse(data.prediction);
         this.prediction.introduction = result.introduction;
         this.prediction.cards = result.cards;
@@ -281,11 +280,13 @@ export const useQuestionnaireStore = defineStore("questionnaire", {
       const feelings = this.questions[1].response.join(",");
       const significantExperiences = this.questions[3].response.join(",");
       const reactionToChanges = `they ${this.questions[4].response}`;
-      const manageStress = this.questions[5].response.includes("Not managing it at all")
-      ? `struggle managing stress but they also ${this.questions[5].response
-          .filter(option => option !== "Not managing it at all")
-          .join(", ")}`
-      : 'manage stress by ' + this.questions[5].response.join(", ");
+      const manageStress = this.questions[5].response.includes(
+        "Not managing it at all"
+      )
+        ? `struggle managing stress but they also ${this.questions[5].response
+            .filter((option) => option !== "Not managing it at all")
+            .join(", ")}`
+        : "manage stress by " + this.questions[5].response.join(", ");
       const extrovertScale = this.questions[6].response.toFixed(2);
       const resonateStatements = this.questions[7].response.join(",");
       const personalGrowth = this.questions[8].response.join(",");
@@ -308,24 +309,26 @@ export const useQuestionnaireStore = defineStore("questionnaire", {
       localStorage.setItem("userEmail", email);
     },
 
-    async submitFeedback(rating, feedbackText) {
+    async submitFeedback(name, rating, feedbackText) {
+      this.feedback.rating = rating;
+      this.feedback.feedbackText = feedbackText;
+
       try {
-        // Save feedback to database
-        const feedbackRef = doc(db, "questionnaires", this.userEmail);
-        await updateDoc(feedbackRef, {
-          feedback: {
-            rating: rating.value,
-            text: feedbackText.value,
-          },
+        await setDoc(doc(db, "feedbacks", name), {
+          name,
+          username: this.username,
+          feedback: this.feedback,
         });
+
       } catch (error) {
-        console.error("Error submitting feedback:", error);
+        console.error("Error saving feedback to Firestore:", error);
       }
+
+      return;
     },
 
     clearState() {
       this.currentIndex = 0;
-      this.responses = {};
       this.username = "";
       this.userEmail = "";
       localStorage.removeItem("userEmail");

@@ -45,7 +45,7 @@ app.post('/generate-prediction', async (req, res) => {
           messages: [
               {
                   role: "system",
-                  content: "You are an expert tarot card reader with a deep understanding of interpreting four-card spreads. Please provide your insights in a JSON format. Your response should include an 'introduction' where you analyze the year based on the selected emotions, the 'cards' array containing the details and name of each card in the spread, and a 'predictionText' offering insights into my future. Ensure the JSON output strictly follows this structure: { 'introduction': '', 'cards': [{'details': '', 'name': ''}], 'predictionText': ''}.",
+                  content: "You are an expert tarot card reader with a deep understanding of interpreting four-card spreads. Please provide your insights in a JSON format. Your response should include an 'introduction' where you analyze the year based on the selected emotions, the 'cards' array containing the details and name of each card in the spread, and a 'predictionText' offering insights into my future. Ensure the JSON output strictly follows this structure, do not change field names of the JSON: { 'introduction': '', 'cards': [{'details': '', 'name': ''}], 'predictionText': ''}.",
               },
               { role: "user", content: predictionPrompt },
           ],
