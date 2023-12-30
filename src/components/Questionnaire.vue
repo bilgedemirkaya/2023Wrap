@@ -67,9 +67,9 @@ const getFeelingTextBasedOnResponse = () => {
 
 const getLifeChangingPreText = () => {
   if (answer.value.length > 3) {
-    return "What. The. Heck. – That's quite a rollercoaster of a year!";
+    return "What. The. Heck. – That's quite a rollercoaster!";
   } else if (answer.value.length > 2) {
-    return "What. A. Year. – You've really been through a lot!";
+    return "What. A. Year. – You've been through a lot!";
   }
 
   return "";

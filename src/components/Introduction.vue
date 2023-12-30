@@ -5,8 +5,8 @@
         What a year it has been! Let's take a moment to celebrate how far we have come—yay!
       </p>
       <p class="text-subtitle-1">
-        Here are some questions about year. Let's see if I can make some exciting
-        predictions about what 2024 based on this.
+        Here are some questions about the year. Let's see if I can make some exciting
+        predictions about what 2024 based on your answers.
       </p>
     </div>
     <v-text-field

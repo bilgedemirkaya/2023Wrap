@@ -27,6 +27,7 @@
             outlined
             @click="flipCard(index)"
             color="#ffffff"
+            v-tooltip.bottom="'Click to flip'"
           >
             <v-card-text v-if="!isCardFlipped(index)">
               <v-img
@@ -343,15 +344,32 @@ function startOver() {
 .v-card-text {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: space-evenly;
 }
 
 @media (max-width: 768px) {
   .tarot-card {
     max-width: 90%;
-    min-height: 80vh;
+    height: 60vh;
     margin: 1rem;
   }
+
+  .text-h5 {
+    font-size: 1.2rem;
+  }
+
+  .v-icon {
+    font-size: 20px;
+  }
+
+  .share-buttons {
+    justify-content: space-around;
+  }
+
+  .prediction-text, .tarot-reading {
+    padding: 1rem;
+  }
+
 }
 
 </style>
