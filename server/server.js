@@ -41,19 +41,16 @@ app.post('/generate-image', async (req, res) => {
 app.post('/generate-prediction', async (req, res) => {
   try {
       const { predictionPrompt } = req.body;
-
       const completion = await openai.chat.completions.create({
           messages: [
               {
                   role: "system",
-                  content: "You are an expert tarot card reader skilled in interpreting five-card spreads.present your interpretation in a casual tone and format your response as JSON output. This output should include an introduction analyzing the year based on the selected emotions, the details of the cards in an array, and a prediction about my future ",
+                  content: "You are an expert tarot card reader with a deep understanding of interpreting four-card spreads. Please provide your insights in a JSON format. Your response should include an 'introduction' where you analyze the year based on the selected emotions, the 'cards' array containing the details and name of each card in the spread, and a 'predictionText' offering insights into my future. Ensure the JSON output strictly follows this structure: { 'introduction': '', 'cards': [{'details': '', 'name': ''}], 'predictionText': ''}.",
               },
               { role: "user", content: predictionPrompt },
           ],
-          model: "gpt-3.5-turbo",
+          model: "gpt-4",
       });
-
-      console.log('completion is', completion.choices[0].message);
 
       // Assuming the prediction is returned in completion.data.choices[0].message.content
       res.json({ prediction: completion.choices[0].message.content });

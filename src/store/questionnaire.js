@@ -13,18 +13,21 @@ export const useQuestionnaireStore = defineStore("questionnaire", {
         text: "How would you rate your year overall?",
         response: 5,
         preText: "",
+        type: 'rate',
       },
       {
         id: "EmotionSelectQuestion",
         text: "Can you pick the emotions you felt deeply this year?",
         response: [],
         preText: "",
+        type: 'text',
       },
       {
         id: "WordGameQuestion",
         text: "",
         response: "",
         preText: "",
+        type: 'text',
       },
       {
         id: "LifeChangingEventQuestion",
@@ -39,15 +42,18 @@ export const useQuestionnaireStore = defineStore("questionnaire", {
           "Significant Health Changes",
           "Achieving a Major Personal Goal",
           "Significant Financial Change",
+          "No Life Changing Events",
           "Other",
         ],
         preText: "",
+        type: 'select',
       },
       {
         id: "ReactToChangeQuestion",
         text: "How do you typically react to significant changes in your life?",
         response: "",
         preText: "",
+        type: 'text',
       },
       {
         id: "StressManagementQuestion",
@@ -63,12 +69,14 @@ export const useQuestionnaireStore = defineStore("questionnaire", {
           "Not managing it at all",
         ],
         preText: "",
+        type: 'select',
       },
       {
         id: "SocialPreferenceQuestion",
         text: "Would you describe yourself as more of an introvert or an extrovert?",
         response: 5,
         preText: "",
+        type: 'rate',
       },
       {
         id: "PersonalTraitQuestion",
@@ -81,7 +89,9 @@ export const useQuestionnaireStore = defineStore("questionnaire", {
           "I enjoy my independence and making my own decisions.",
           "I'm a natural caregiver but often forget about myself.",
           "No matter how hard I try, I doubt my ability to make a change in life.",
+          "I often reflect on my experiences, seeking lessons in every challenge."
         ],
+        type: 'select',
         preText: "",
       },
 
@@ -97,21 +107,25 @@ export const useQuestionnaireStore = defineStore("questionnaire", {
           "Hobbies and Interests",
           "Financial Wellness",
           "Mental Health",
+          "Nothing really",
           "Other",
         ],
         preText: "",
+        type: 'select',
       },
       {
         id: "NewYearResolutionQuestion",
         text: "Let's mentally start preparing for the new year. What are two resolutions you'd like to set for yourself?",
         response: "",
         preText: "",
+        type: 'text',
       },
       {
         id: "HopeQuestion",
         text: "It's only a milestone if you make it one.. How hopeful are you about the upcoming year?",
         response: 5,
         preText: "",
+        type: 'rate',
       },
     ],
     username: "",
@@ -120,7 +134,12 @@ export const useQuestionnaireStore = defineStore("questionnaire", {
       rating: 0,
       feedbackText: "",
     },
-    predictionText: "",
+    prediction: {
+      introduction: "",
+      cards: [],
+      predictionText: "",
+    },
+    isLoading: false,
   }),
 
   actions: {
@@ -143,7 +162,7 @@ export const useQuestionnaireStore = defineStore("questionnaire", {
             email: this.userEmail,
             currentIndex: this.currentIndex,
             questions,
-            predictionText: this.predictionText,
+            prediction: this.prediction,
           });
         } catch (error) {
           console.error("Error saving state to Firestore:", error);
@@ -229,6 +248,7 @@ export const useQuestionnaireStore = defineStore("questionnaire", {
     },
 
     async createPrediction() {
+      this.isLoading = true;
       const predictionPrompt = this.createPrompt();
       try {
         const response = await fetch(`${apiEndpoint}/generate-prediction`, {
@@ -243,12 +263,16 @@ export const useQuestionnaireStore = defineStore("questionnaire", {
           throw new Error("Network response was not ok", response);
         }
         const data = await response.json();
-        console.log("Prediction response:", data);
 
-        return data.prediction.message; // This is the generated prediction text
+        const result = JSON.parse(data.prediction);
+        this.prediction.introduction = result.introduction;
+        this.prediction.cards = result.cards;
+        this.prediction.predictionText = result.predictionText;
+        this.isLoading = false;
       } catch (error) {
         console.error("Error generating prediction:", error);
         // Handle errors appropriately in your application
+        this.isLoading = false;
       }
     },
 
@@ -267,7 +291,7 @@ export const useQuestionnaireStore = defineStore("questionnaire", {
       const personalGrowth = this.questions[8].response.join(",");
       const resolutions = this.questions[9].response.join(",");
 
-      const promptDraft = `Provide a personalized 2024 prediction for a user based on their reflections from 2023. You can make some analysis for their year and unexpected predictions about their next year based on the answers.
+      const promptDraft = `You are an expert tarot card reader. Provide a personalized 2024 prediction for a user based on their reflections from 2023. You can make some analysis for their year and unexpected predictions about their next year based on the answers.
       The user has rated their year overall as ${yearRate} out of 10, deeply experiencing emotions like ${feelings}. They encountered life-changing events such as ${significantExperiences} and
       typically react to new changes as ${reactionToChanges}.
       To manage stress or challenges, they often ${manageStress}.
@@ -297,31 +321,6 @@ export const useQuestionnaireStore = defineStore("questionnaire", {
       } catch (error) {
         console.error("Error submitting feedback:", error);
       }
-    },
-
-    getTarotCardDetails() {
-      return [
-        {
-          id: 1,
-          predictionText: 'Pred1',
-          imageUrl: '../assets/tarot-1.png'
-        },
-        {
-          id: 2,
-          predictionText: 'Pred2',
-          imageUrl: '.,/assets/tarot-2.png'
-        },
-        {
-          id: 3,
-          predictionText: 'Pred3',
-          imageUrl: '../assets/tarot-3.png'
-        },
-        {
-          id: 4,
-          predictionText: 'Pred4',
-          imageUrl: '../assets/tarot-4.png'
-        },
-      ]
     },
 
     clearState() {

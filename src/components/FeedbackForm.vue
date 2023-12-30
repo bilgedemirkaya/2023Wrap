@@ -7,7 +7,9 @@
     <template v-slot:default="{ isActive }">
       <v-card>
         <v-card-text>
-          <v-rating v-model="rating" dense color="yellow" large></v-rating>
+          <div class="stars">
+            <v-rating v-model="rating" dense color="yellow" large ></v-rating>
+          </div>
           <v-textarea
             label="Your feedback"
             hint="Optional"
@@ -37,8 +39,6 @@ const feedbackText = ref("");
 
 const submit = async () => {
   isActive.value = false;
-  rating.value = 0;
-  feedbackText.value = "";
   await store.submitFeedback(rating.value, feedbackText.value);
 };
 </script>
@@ -52,5 +52,10 @@ const submit = async () => {
   cursor: pointer;
   display: block;
   margin: 20px auto; /* Center button */
+}
+
+.stars {
+  margin: auto;
+  width: max-content;
 }
 </style>
