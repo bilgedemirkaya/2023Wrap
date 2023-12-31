@@ -164,6 +164,7 @@ export const useQuestionnaireStore = defineStore("questionnaire", {
             currentIndex: this.currentIndex,
             questions,
             prediction: this.prediction,
+            isError: this.isError
           });
         } catch (error) {
           console.error("Error saving state to Firestore:", error);
