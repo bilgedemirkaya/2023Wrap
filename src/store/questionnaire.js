@@ -264,6 +264,7 @@ export const useQuestionnaireStore = defineStore("questionnaire", {
         }
         const data = await response.json();
         const result = JSON.parse(data.prediction.replace(/\\\"/g, "\""));
+        console.log('result is', result);
         this.prediction.introduction = result.introduction;
         this.prediction.cards = result.cards;
         this.prediction.predictionText = result.predictionText;

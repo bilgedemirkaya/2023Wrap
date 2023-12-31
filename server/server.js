@@ -38,7 +38,7 @@ app.post('/generate-image', async (req, res) => {
   }
 });
 
-app.post('/generate-prediction', async (req, res) => {
+app.post('/generate-prediction', cors(), async (req, res, next) => {
   try {
       const { predictionPrompt } = req.body;
       const completion = await openai.chat.completions.create({
@@ -52,8 +52,11 @@ app.post('/generate-prediction', async (req, res) => {
           model: "gpt-4",
       });
 
+      res.header("Access-Control-Allow-Origin", "*");
+
       // Assuming the prediction is returned in completion.data.choices[0].message.content
       res.json({ prediction: completion.choices[0].message.content });
+      next();
   } catch (error) {
       console.error('Error with OpenAI API:', error);
       res.status(500).send('Error generating prediction');
