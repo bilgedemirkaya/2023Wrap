@@ -294,13 +294,14 @@ function startOver() {
   margin-right: 8px;
 }
 
-.text-h5, {
+.text-h5 {
   font-size: 1.2rem;
   font-weight: bold;
   color: #333;
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
   text-align: center;
 }
+
 .details-text {
   margin: 3rem 0;
 }
