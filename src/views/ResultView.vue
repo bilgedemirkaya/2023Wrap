@@ -1,6 +1,6 @@
 <template>
   <div class="result-page">
-    <Loading v-if="store.isLoading"/>
+    <Loading v-if="store.isLoading" />
     <v-container
       v-else-if="store.prediction.predictionText"
       class="tarot-reading"
@@ -8,8 +8,12 @@
       <v-row>
         <v-col cols="12">
           <v-card class="mx-auto" color="#d2cbb2bb">
-            <v-card-text> <p v-text="store.prediction.introduction" class="font-weight-bold" />
-              </v-card-text>
+            <v-card-text>
+              <p
+                v-text="store.prediction.introduction"
+                class="font-weight-bold"
+              />
+            </v-card-text>
           </v-card>
         </v-col>
       </v-row>
@@ -39,7 +43,7 @@
                 <v-card-title class="text-h5">{{ card.name }}</v-card-title>
 
                 <v-icon class="tap-icon">mdi-gesture-tap</v-icon>
-            </div>
+              </div>
             </v-card-text>
             <v-card-text v-else>
               <p class="details-text">{{ card.details }}</p>
@@ -64,21 +68,28 @@
       <v-row>
         <v-col cols="12">
           <v-card class="mx-auto" color="#d2cbb2bb">
-            <v-card-text> <p v-text="store.prediction.predictionText" class="font-weight-bold" /></v-card-text>
+            <v-card-text>
+              <p
+                v-text="store.prediction.predictionText"
+                class="font-weight-bold"
+            /></v-card-text>
           </v-card>
         </v-col>
       </v-row>
     </v-container>
-    <v-container v-else-if="!store.prediction.predictionText">
+    <v-container v-else-if="store.isError" class="feedback-container">
       <v-row>
-        Sorry, due to a server error, I could not render your response. I will send your prediction to your email.
+        <p>
+          Sorry, due to a server error, I could not render your response. I will
+          send your prediction to your email.
+        </p>
       </v-row>
     </v-container>
     <div class="feedback-container" v-if="!store.isLoading">
       <p>
         Thank you for participating in the journey! Your predictions and tarot
-        image were uniquely created using DALL·E and GPT-3.5-turbo models, based
-        on your answers.
+        image were uniquely created using DALL·E and GPT-4 models, based on your
+        answers.
       </p>
       <FeedbackForm />
       <v-btn text="Try Again" @click="startOver()"> </v-btn>
@@ -103,6 +114,7 @@ const isCard1Flipped = ref(false);
 const isCard2Flipped = ref(false);
 const isCard3Flipped = ref(false);
 const isCard4Flipped = ref(false);
+
 function isCardFlipped(index) {
   if (index === 0) {
     return isCard1Flipped.value;
@@ -122,8 +134,10 @@ function isCardFlipped(index) {
 
 onBeforeMount(() => {
   if (!store.isLoading && !store.prediction.predictionText) {
-    router.push('/');
-      /* predictionRef.value = {
+    router.push("/");
+  }
+
+  /* predictionRef.value = {
         // Mocker
       prediction: {
         introduction:
@@ -158,7 +172,6 @@ onBeforeMount(() => {
           "In 2024, based on the insights from the tarot cards, you can expect a year of transformation and growth. The Eight of Swords suggests that it's time to break free from self-imposed limitations and negative thinking. Embrace optimism and challenge any fears that may be holding you back. The Two of Pentacles advises finding balance among various priorities. As you navigate relationships, family, education, and skills, make sure to manage your time and energy effectively. The Emperor signals a period of stability and taking control of your life. This is an opportune time to assert your authority and make decisions that align with your long-term goals. Finally, the Six of Wands promises rewards and recognition. Your past challenges will pave the way for success and triumph. Embrace the victories and use them as motivation to continue striving for greatness. Remember, 2024 holds tremendous potential for personal growth and resilience. Stay focused, trust yourself, and make the most of the opportunities that come your way.",
       },
     }; */
-  }
 
 });
 
@@ -193,33 +206,42 @@ function getCardImage(index) {
 }
 
 const shareOnTwitter = (card) => {
-  var url = 'https://wth2023.com';  // The URL of your page
-    var text = "🎉 Check out this new year card! 🎉\n\n" +
-               "🔹 " + card.details + " 🔹\n\n" +
-               "Try yours: " + url + " #NewYear2023" + " AIPrediction";
+  var url = "https://wth2023.com"; // The URL of your page
+  var text =
+    "🎉 Check out this new year card! 🎉\n\n" +
+    "🔹 " +
+    card.details +
+    " 🔹\n\n" +
+    "Try yours: " +
+    url +
+    " #NewYear2023" +
+    " AIPrediction";
 
-    var twitterUrl = "https://twitter.com/intent/tweet?url=" + encodeURIComponent(url) +
-                     "&text=" + encodeURIComponent(text);
-    window.open(twitterUrl, '_blank', 'width=800,height=600');
+  var twitterUrl =
+    "https://twitter.com/intent/tweet?url=" +
+    encodeURIComponent(url) +
+    "&text=" +
+    encodeURIComponent(text);
+  window.open(twitterUrl, "_blank", "width=800,height=600");
 };
 
 const shareOnInstagram = (card) => {
   const shareData = {
-      title: "My 2024 Prediction",
-      text: "Check out my 2024 prediction! " + card.details, // Include card description
-      url: card.imageUrl // URL of the image
-    };
+    title: "My 2024 Prediction",
+    text: "Check out my 2024 prediction! " + card.details, // Include card description
+    url: card.imageUrl, // URL of the image
+  };
 
-    // Attempt to share via the Web Share API
-    navigator.share(shareData).catch((error) => {
-      console.error('Error sharing:', error);
-      alert("Error in sharing. Please try again.");
-    });
-  }
+  // Attempt to share via the Web Share API
+  navigator.share(shareData).catch((error) => {
+    console.error("Error sharing:", error);
+    alert("Error in sharing. Please try again.");
+  });
+};
 
 function startOver() {
   store.clearState();
-  router.push('/');
+  router.push("/");
 }
 </script>
 
@@ -231,7 +253,6 @@ function startOver() {
   min-height: 100vh;
   padding: 2rem;
 }
-
 
 .share-buttons {
   display: flex;
@@ -272,13 +293,13 @@ function startOver() {
   padding: 2rem;
   border-radius: 15px;
   margin: auto;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-  color: #d2cbb2bb
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  color: #d2cbb2bb;
 }
 
 .feedback-container {
   text-align: center;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   color: #fffefe;
   margin: auto;
   padding: 2rem;
@@ -323,7 +344,5 @@ function startOver() {
   .tarot-reading {
     padding: 1rem;
   }
-
 }
-
 </style>

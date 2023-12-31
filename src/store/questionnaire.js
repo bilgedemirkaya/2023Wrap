@@ -140,6 +140,7 @@ export const useQuestionnaireStore = defineStore("questionnaire", {
       predictionText: "",
     },
     isLoading: false,
+    isError: false,
   }),
 
   actions: {
@@ -264,7 +265,6 @@ export const useQuestionnaireStore = defineStore("questionnaire", {
         }
         const data = await response.json();
         const result = JSON.parse(data.prediction.replace(/\\\"/g, "\""));
-        console.log('result is', result);
         this.prediction.introduction = result.introduction;
         this.prediction.cards = result.cards;
         this.prediction.predictionText = result.predictionText;
@@ -273,6 +273,7 @@ export const useQuestionnaireStore = defineStore("questionnaire", {
         console.error("Error generating prediction:", error);
         // Handle errors appropriately in your application
         this.isLoading = false;
+        this.isError = true;
       }
     },
 
